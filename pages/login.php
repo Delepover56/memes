@@ -68,12 +68,12 @@
                 <label for="password" class="w-full text-start mb-4">Password:</label>
                 <div class="password w-full flex mb-7">
                     <input type="password" name="password" id="password" class="px-4 py-3 w-full text-black outline-none rounded-xl rounded-tr-none rounded-br-none cursor-text focus:shadow-md  duration-[0.4s] transition-all">
-                    <button class="h-full w-[10%] bg-white rounded-tr-xl rounded-br-xl flex justify-center items-center border-l border-[rgba(191,191,191,0.74)] border-solid cursor-pointer  duration-[0.4s] transition-all">
+                    <span id="passwordToggle" class="h-full w-[10%] bg-white rounded-tr-xl rounded-br-xl flex justify-center items-center border-l border-[rgba(191,191,191,0.74)] border-solid cursor-pointer duration-[0.4s] transition-all" onclick="togglePassword()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                             <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
                             <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
                         </svg>
-                    </button>
+                    </span>
                 </div>
                 <div class="check w-full flex justify-start items-center mb-7 pl-[11px]">
                     <input type="checkbox" name="remember" class="cursor-pointer" id="remember">
@@ -88,6 +88,7 @@
 
         </div>
 
+        <script src="../includes/js/login.js"></script>
     </body>
 
     </html>

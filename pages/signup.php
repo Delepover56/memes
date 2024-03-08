@@ -24,30 +24,23 @@ if (isset($_POST["submit"])) {
     } elseif ($password !== $cpassword) {
         echo "<script>alert('Passwords do not match.')</script>";
     } else {
-        $emailSql =  "SELECT * FROM users WHERE user_email = '$email'";
-        $resultEmail = $conn->query($emailSql);
-        if ($resultEmail->num_rows > 0) {
-            while ($row = $resultEmail->fetch_assoc()) {
-                $useremail = $row['user_email'];
-            }
-            // Display a warning if the email already exists
-            if ($useremail == $email) {
+        // Check if username, email, or phone number already exists
+        $checkSql = "SELECT * FROM users WHERE user_name = '$user' OR user_email = '$email' OR user_phone = '$phone'";
+        $resultCheck = $conn->query($checkSql);
+
+        if ($resultCheck->num_rows > 0) {
+            $row = $resultCheck->fetch_assoc();
+            if ($row['user_name'] == $user) {
+                echo "<script>alert('Username already exists.')</script>";
+            } elseif ($row['user_email'] == $email) {
                 echo "<script>alert('Email already exists.')</script>";
-            }
-        }
-        $userSql =  "SELECT * FROM users WHERE user_name = '$user'";
-        $resultUser = $conn->query($userSql);
-        if ($resultUser->num_rows > 0) {
-            while ($row = $resultUser->fetch_assoc()) {
-                $username = $row['user_name'];
-            }
-            // Display a warning if the username already exists
-            if ($username === $user) {
-                echo "<script>alert('Username is already taken please make another.')</script>";
+            } elseif ($row['user_phone'] == $phone) {
+                echo "<script>alert('Phone number already exists.')</script>";
             }
         } else {
+            // Insert the new user if no existing records found
             $signupSql = "INSERT INTO `users` (`user_name`, `user_display`, `user_email`, `user_phone`, `user_dob`, `user_gender`, `user_password`, `user_creationTime`) 
-        VALUES ('$user', '$display', '$email', '$phone', '$dob', '$gender', '$password', current_timestamp())";
+            VALUES ('$user', '$display', '$email', '$phone', '$dob', '$gender', '$password', current_timestamp())";
             $resultSignup = $conn->query($signupSql);
 
             if ($resultSignup) {
@@ -57,6 +50,7 @@ if (isset($_POST["submit"])) {
     }
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -159,24 +153,24 @@ if (isset($_POST["submit"])) {
                     <label for="password" class="w-full text-start mb-4">Password:</label>
                     <div class="password flex mb-7">
                         <input type="password" name="password" id="password" class="px-4 py-[8px] w-full text-black outline-none rounded-xl rounded-tr-none rounded-br-none cursor-text focus:shadow-md  duration-[0.4s] transition-all">
-                        <button class="w-[20%] bg-white rounded-tr-xl rounded-br-xl flex justify-center items-center border-l border-[rgba(191,191,191,0.74)] border-solid cursor-pointer  duration-[0.4s] transition-all">
+                        <span id="passwordToggle" class="w-[20%] bg-white rounded-tr-xl rounded-br-xl flex justify-center items-center border-l border-[rgba(191,191,191,0.74)] border-solid cursor-pointer duration-[0.4s] transition-all" onclick="togglePasswordVisibility('password')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                                 <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
                                 <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
                             </svg>
-                        </button>
+                        </span>
                     </div>
                 </div>
                 <div class="flex flex-col h-full w-full">
                     <label for="cpassword" class="w-full text-start mb-4">Repeat Password:</label>
                     <div class="cpassword flex mb-7">
                         <input type="password" name="cpassword" id="cpassword" class="px-4 py-[8px] w-full text-black outline-none rounded-xl rounded-tr-none rounded-br-none cursor-text focus:shadow-md  duration-[0.4s] transition-all">
-                        <button class="w-[20%] bg-white rounded-tr-xl rounded-br-xl flex justify-center items-center border-l border-[rgba(191,191,191,0.74)] border-solid cursor-pointer  duration-[0.4s] transition-all">
+                        <span id="cpasswordToggle" class="w-[20%] bg-white rounded-tr-xl rounded-br-xl flex justify-center items-center border-l border-[rgba(191,191,191,0.74)] border-solid cursor-pointer duration-[0.4s] transition-all" onclick="togglePasswordVisibility('cpassword')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                                 <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
                                 <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
                             </svg>
-                        </button>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -191,6 +185,7 @@ if (isset($_POST["submit"])) {
 
     </div>
 
+    <script src="../includes/js/signup.js"></script>
 </body>
 
 </html>
