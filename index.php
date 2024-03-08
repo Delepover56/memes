@@ -2,6 +2,24 @@
 require_once('includes\config\config.php');
 session_start();
 
+$sessionUserID = isset($_SESSION['session_id']);
+
+$sql = "SELECT * FROM `users` WHERE `user_id` = '$sessionUserID'";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    $rows = $result->fetch_assoc();
+    $loginID = $rows['user_id'];
+    $loginUser = $rows['user_name'];
+    $loginDisplay = $rows['user_display'];
+    $loginEmail = $rows['user_email'];
+    $loginPhone = $rows['user_phone'];
+    $loginPassword = $rows['user_password'];
+    $loginDOB = $rows['user_dob'];
+    $loginGender = $rows['user_gender'];
+    $loginRole = $rows['user_role'];
+    $loginCreation = $rows['user_creationTime'];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -54,6 +72,10 @@ session_start();
         .title {
             font-family: 'lemon';
         }
+
+        img {
+            width: 40px;
+        }
     }
 </style>
 
@@ -95,19 +117,31 @@ session_start();
                         </svg> <span class="ml-3">
                             Upload</span></a>
                 </li>
-                <li>
-                    <?php
-                    if (empty($_SESSION['ID'])) {
-                        echo '<li class="flex items-center justify-center shadow-md shadow-zinc-900 rounded-2xl rounded-tr-none rounded-tl-none hover:shadow-red-600 duration-[0.4s] transition-all mx-5">
-                    <a href="pages\login.php" class="flex items-center justify-center  py-3 px-5"><span class="ml-3">Login</span></a>
-                </li>';
-                    } else {
-                        echo '<li class="flex items-center justify-center shadow-md shadow-zinc-900 rounded-2xl rounded-tr-none rounded-tl-none hover:shadow-red-600 duration-[0.4s] transition-all mx-5">
-                    <a href="pages\profile.php" class="flex items-center justify-center  py-3 px-5"><img src="includes\assets\images\user.jpg" alt="user"><span class="ml-3">$session_DISPLAY</span></a>
-                </li>';
-                    }
-                    ?>
-                </li>
+                <?php
+                if (empty($_SESSION['session_id'])) {
+                ?>
+                    <li class="flex items-center justify-center shadow-md shadow-zinc-900 rounded-2xl rounded-tr-none rounded-tl-none hover:shadow-red-600 duration-[0.4s] transition-all mx-5">
+                        <a href="pages\login.php" class="flex items-center justify-center py-3 px-5"><span class="">Login</span></a>
+                    </li>
+                <?php
+                } else {
+                ?>
+                    <li class="flex items-center justify-center shadow-md shadow-zinc-900 rounded-full hover:shadow-red-600 duration-[0.4s] transition-all mx-5 cursor-pointer">
+                        <div class="relative dropdown">
+                            <div id="userIcon" class="info flex w-full h-full items-center justify-center cursor-pointer" onclick="toggleDropdown()">
+                                <img src="./includes/assets/images/user.jpg" alt="user" class="rounded-full">
+                            </div>
+
+                            <!-- Dropdown menu -->
+                            <ul id="dropdownMenu" class="dropdown-menu absolute hidden bg-[rgb(30,30,30)] right-0 mt-2 rounded-md shadow-lg">
+                                <li><a href="profile.php" class="block px-4 py-2 text-sm text-white hover:bg-gray-800">View Profile</a></li>
+                                <li><a href="logout.php" class="block px-4 py-2 text-sm text-white hover:bg-gray-800">Sign Out</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                <?php
+                }
+                ?>
             </ul>
 
 
@@ -116,6 +150,8 @@ session_start();
 
     </header>
 
+
+    <script src="./includes/js/index.js"></script>
 </body>
 
 </html>

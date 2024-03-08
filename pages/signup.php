@@ -2,6 +2,11 @@
 require_once('../includes/config/config.php');
 session_start();
 
+if (isset($_SESSION['session_id'])) {
+    header("Location: ../index.php");
+    exit();
+}
+
 if (isset($_POST["submit"])) {
     $user = $_POST["user"];
     $display = $_POST["display"];
@@ -127,7 +132,7 @@ if (isset($_POST["submit"])) {
             <div class="flex w-full">
                 <div class="flex flex-col w-full">
                     <label for="email" class="w-full text-start mb-4">Email:</label>
-                    <input type="email" name="email" id="email" class="px-4 py-[8px] w-full text-black outline-none rounded-xl mb-7 cursor-text focus:shadow-md  duration-[0.4s] transition-all">
+                    <input type="text" name="email" id="email" class="px-4 py-[8px] w-full text-black outline-none rounded-xl mb-7 cursor-text focus:shadow-md  duration-[0.4s] transition-all">
                 </div>
             </div>
             <div class="flex w-full">
